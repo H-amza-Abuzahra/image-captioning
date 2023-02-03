@@ -82,4 +82,4 @@ def return_caption():
     return result
 
 if __name__ == "__main__":
-    app.run(debug=True, port=1001)
+    app.run(debug=True)
