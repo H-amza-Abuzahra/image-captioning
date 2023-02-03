@@ -13,6 +13,7 @@ app = Flask(__name__)
 
 class CaptionGenerator:
     def __init__(self, model_name="8k"):
+        self.model_name = model_name
         self.wrd_indx, self.indx_wrd, self.max_length = self.load_data()
 
     def read_pickle(self, name):
@@ -41,7 +42,7 @@ class CaptionGenerator:
     def get_caption(self, image):
         feature = self.extract_features(image)
         in_text = "startsq"
-        model = keras.models.load_model(model_name)
+        model = keras.models.load_model(self.model_name)
         for i in range(self.max_length):
             in_seq = [self.wrd_indx[w] for w in in_text.split(" ")]
             in_seq = pad_sequences([in_seq], maxlen=self.max_length, padding="post")[0]
