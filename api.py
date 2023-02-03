@@ -13,9 +13,6 @@ app = Flask(__name__)
 
 class CaptionGenerator:
     def __init__(self, model_name="8k"):
-        self.CNNmodel = VGG16()
-        self.CNNmodel = Model(inputs=self.CNNmodel.inputs, outputs=self.CNNmodel.layers[-2].output)
-        self.model = keras.models.load_model(model_name)
         self.wrd_indx, self.indx_wrd, self.max_length = self.load_data()
 
     def read_pickle(self, name):
@@ -35,17 +32,21 @@ class CaptionGenerator:
         img = image.img_to_array(img)
         img = np.expand_dims(img, axis=0)
         img = preprocess_input(img)
-        features = self.CNNmodel.predict(img)
+        CNNmodel = VGG16()
+        CNNmodel = Model(inputs=self.CNNmodel.inputs, outputs=self.CNNmodel.layers[-2].output)
+        features = CNNmodel.predict(img)
+        del CNNmodel
         return features  
 
     def get_caption(self, image):
         feature = self.extract_features(image)
         in_text = "startsq"
+        model = keras.models.load_model(model_name)
         for i in range(self.max_length):
             in_seq = [self.wrd_indx[w] for w in in_text.split(" ")]
             in_seq = pad_sequences([in_seq], maxlen=self.max_length, padding="post")[0]
             in_seq = np.array([in_seq])
-            pred = self.model.predict([feature, in_seq], verbose=0)
+            pred = model.predict([feature, in_seq], verbose=0)
             pred = np.argmax(pred)
             word = self.indx_wrd.get(pred)
             if word is None:
@@ -54,13 +55,12 @@ class CaptionGenerator:
             in_text += " " + word
             if word == "endsq":
                 break
+        del model
         return in_text
 
 
 # CORS(app)
 cg = CaptionGenerator()
-app.config['UPLOAD_FOLDER'] = 'uploads/'
-
 
 @app.route("/")
 def hello():
