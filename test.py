@@ -1,5 +1,5 @@
 import keras 
 
-model = keras.models.load_model('8k1')
+model = keras.models.load_model('8k')
 
 print("it works")
