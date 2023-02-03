@@ -9,6 +9,8 @@ from keras_preprocessing import image
 from keras_preprocessing.sequence import pad_sequences
 from PIL import Image
 
+app = Flask(__name__)
+
 class CaptionGenerator:
     def __init__(self, model_name="8k"):
         self.CNNmodel = VGG16()
@@ -55,7 +57,6 @@ class CaptionGenerator:
         return in_text
 
 
-app = Flask(__name__)
 # CORS(app)
 cg = CaptionGenerator()
 app.config['UPLOAD_FOLDER'] = 'uploads/'
@@ -82,4 +83,4 @@ def return_caption():
     return result
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(threaded=True)
