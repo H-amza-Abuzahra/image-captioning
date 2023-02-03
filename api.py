@@ -1,5 +1,5 @@
 from flask import Flask, request
-# from flask_cors import CORS
+from flask_cors import CORS
 import numpy as np
 import pickle
 import keras
@@ -10,6 +10,8 @@ from keras_preprocessing.sequence import pad_sequences
 from PIL import Image
 
 app = Flask(__name__)
+CORS(app)
+
 
 class CaptionGenerator:
     def __init__(self, model_name="8k"):
@@ -34,7 +36,7 @@ class CaptionGenerator:
         img = np.expand_dims(img, axis=0)
         img = preprocess_input(img)
         CNNmodel = VGG16()
-        CNNmodel = Model(inputs=self.CNNmodel.inputs, outputs=self.CNNmodel.layers[-2].output)
+        CNNmodel = Model(inputs=CNNmodel.inputs, outputs=CNNmodel.layers[-2].output)
         features = CNNmodel.predict(img)
         del CNNmodel
         return features  
@@ -60,7 +62,6 @@ class CaptionGenerator:
         return in_text
 
 
-# CORS(app)
 cg = CaptionGenerator()
 
 @app.route("/")
