@@ -1,5 +1,5 @@
 from flask import Flask, request
-from flask_cors import CORS
+# from flask_cors import CORS
 import numpy as np
 import pickle
 import keras
@@ -10,7 +10,7 @@ from keras_preprocessing.sequence import pad_sequences
 from PIL import Image
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
 
 class CaptionGenerator:
