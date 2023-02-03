@@ -44,7 +44,7 @@ class CaptionGenerator:
     def get_caption(self, image):
         feature = self.extract_features(image)
         in_text = "startsq"
-        model = keras.models.load_model("./8k")
+        model = keras.models.load_model("./8k", compile=False)
         for i in range(self.max_length):
             in_seq = [self.wrd_indx[w] for w in in_text.split(" ")]
             in_seq = pad_sequences([in_seq], maxlen=self.max_length, padding="post")[0]
